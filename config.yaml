@@ -1,0 +1,20 @@
+name: 'AdelaiDet'
+description: 'ICDAR 2019 Robust Reading Challenge on Reading Chinese Text on Signboard'
+tags: ['AdelaiDet']
+command: 'bash run.sh'
+
+#resources:
+#  cluster: simcloud-mr2.apple.com
+#  docker_image: docker.apple.com/turibolt/pytorch1.0.1:latest
+#  num_gpus: 1
+#  num_cpus: 2
+#  timeout: 10d
+
+resources:
+  cluster: apc_usmsc28
+  docker_image: docker.apple.com/turibolt/pytorch1.0.1:latest
+  num_cpus: 2
+  num_gpus: 4
+  memory_gb: 23
+  disk_gb: 128
+  timeout: 14d

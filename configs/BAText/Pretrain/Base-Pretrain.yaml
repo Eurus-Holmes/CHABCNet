@@ -1,0 +1,4 @@
+_BASE_: "../Base-BAText.yaml"
+DATASETS:
+  TRAIN: ("ReCTS_train",) 
+  TEST: ("ReCTS_test",)

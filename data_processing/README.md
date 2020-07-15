@@ -46,16 +46,22 @@ python change_json.py
 ```
 
 
-## Step three: Given polygonal annotation, generating bezier curve annotation.
+## Step three: Given polygonal annotation, generating bezier curve annotation
 
 ```pyhon
 python my_Bezier_generator2.py
 ```
 
 
-## Step four: Given bezier curve annotation, generating coco-like annotation format for training abcnet.
+## Step four: Given bezier curve annotation, generating coco-like annotation format for training abcnet
     
 ```python
 python my_generate_abcnet_json.py ./ train 0
 ```
     
+
+## Step five: Rename
+    
+```python
+python rename.py
+```
