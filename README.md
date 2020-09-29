@@ -1,6 +1,6 @@
-# AdelaiDet
+# CHABCNet
 
-> [Source](https://github.com/aim-uofa/AdelaiDet)
+> [ABCNet](https://github.com/aim-uofa/AdelaiDet) on the Chinese dataset.
 
 
 ## Installation
