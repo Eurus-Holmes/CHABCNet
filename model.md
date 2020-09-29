@@ -341,6 +341,26 @@ OneStageRCNN(
             (1): GroupNorm(32, 256, eps=1e-05, affine=True)
             (2): ReLU(inplace=True)
           )
+          (2): Sequential(
+            (0): Conv2d(256, 256, kernel_size=(3, 3), stride=(2, 1), padding=(1, 1), bias=False)
+            (1): GroupNorm(32, 256, eps=1e-05, affine=True)
+            (2): ReLU(inplace=True)
+          )
+          (3): Sequential(
+            (0): Conv2d(256, 256, kernel_size=(3, 3), stride=(2, 1), padding=(1, 1), bias=False)
+            (1): GroupNorm(32, 256, eps=1e-05, affine=True)
+            (2): ReLU(inplace=True)
+          )
+          (4): Sequential(
+            (0): Conv2d(256, 256, kernel_size=(3, 3), stride=(2, 1), padding=(1, 1), bias=False)
+            (1): GroupNorm(32, 256, eps=1e-05, affine=True)
+            (2): ReLU(inplace=True)
+          )
+          (5): Sequential(
+            (0): Conv2d(256, 256, kernel_size=(3, 3), stride=(2, 1), padding=(1, 1), bias=False)
+            (1): GroupNorm(32, 256, eps=1e-05, affine=True)
+            (2): ReLU(inplace=True)
+          )
         )
         (rnn): BidirectionalLSTM(
           (rnn): LSTM(256, 256, bidirectional=True)
@@ -349,11 +369,11 @@ OneStageRCNN(
       )
       (criterion): NLLLoss()
       (attention): Attention(
-        (embedding): Embedding(4137, 256)
+        (embedding): Embedding(5715, 256)
         (attn_combine): Linear(in_features=512, out_features=256, bias=True)
         (dropout): Dropout(p=0.1, inplace=False)
         (gru): GRU(256, 256)
-        (out): Linear(in_features=256, out_features=4137, bias=True)
+        (out): Linear(in_features=256, out_features=5715, bias=True)
         (vat): Linear(in_features=256, out_features=1, bias=True)
       )
     )
