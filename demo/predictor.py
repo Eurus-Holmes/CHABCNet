@@ -8,15 +8,6 @@ import cv2
 import torch
 import matplotlib.pyplot as plt
 
-# 指定默认字体
-plt.rcParams['font.sans-serif'] = ['SimHei']
-plt.rcParams['font.family'] ='sans-serif'
-# 解决负号'-'显示为方块的问题
-plt.rcParams['axes.unicode_minus'] = False
-
-from matplotlib.font_manager import _rebuild
-_rebuild()
-
 from detectron2.data import MetadataCatalog
 from detectron2.engine.defaults import DefaultPredictor
 from detectron2.utils.video_visualizer import VideoVisualizer

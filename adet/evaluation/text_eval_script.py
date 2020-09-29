@@ -5,10 +5,11 @@ from collections import namedtuple
 from adet.evaluation import rrc_evaluation_funcs
 import importlib
 import sys
-
+import numpy as np
 import math 
 
 import Levenshtein as lstn
+import turibolt as bolt
 
 WORD_SPOTTING =True
 def evaluation_imports():
@@ -182,7 +183,33 @@ def evaluate_method(gtFilePath, submFilePath, evaluationParams):
                 transDet = transDet[0:len(transDet)-1]
                 
             return transGt == transDet
-                    
+
+    def cal_sim(str1, str2):
+        """
+        Normalized Edit Distance metric (1-N.E.D specifically)
+        """
+        m = len(str1) + 1
+        n = len(str2) + 1
+        matrix = np.zeros((m, n))
+        for i in range(m):
+            matrix[i][0] = i
+
+        for j in range(n):
+            matrix[0][j] = j
+
+        for i in range(1, m):
+            for j in range(1, n):
+                if str1[i - 1] == str2[j - 1]:
+                    matrix[i][j] = matrix[i - 1][j - 1]
+                else:
+                    matrix[i][j] = min(matrix[i - 1][j - 1], min(matrix[i][j - 1], matrix[i - 1][j])) + 1
+
+        lev = matrix[m - 1][n - 1]
+        if (max(m - 1, n - 1)) == 0:
+            sim = 1.0
+        else:
+            sim = 1.0 - lev / (max(m - 1, n - 1))
+        return sim
     
     def include_in_dictionary(transcription):
         """
@@ -264,6 +291,9 @@ def evaluate_method(gtFilePath, submFilePath, evaluationParams):
     arrGlobalConfidences = [];
     arrGlobalMatches = [];
 
+    Normalized_ED = 0
+    total_num = 0
+
     for resFile in gt:
         # print('resgt', resFile)
         gtFile = rrc_evaluation_funcs.decode_utf8(gt[resFile])
@@ -272,7 +302,7 @@ def evaluate_method(gtFilePath, submFilePath, evaluationParams):
 
         recall = 0
         precision = 0
-        hmean = 0    
+        hmean = 0
         detCorrect = 0
         detOnlyCorrect = 0
         iouMat = np.empty([1,1])
@@ -294,6 +324,8 @@ def evaluate_method(gtFilePath, submFilePath, evaluationParams):
         sampleAP = 0;
 
         pointsList,_,transcriptionsList = rrc_evaluation_funcs.get_tl_line_values_from_file_contents(gtFile,evaluationParams['CRLF'],evaluationParams['LTRB'],True,False)
+
+        total_num += len(transcriptionsList)
 
         for n in range(len(pointsList)):
             points = pointsList[n]
@@ -392,9 +424,12 @@ def evaluate_method(gtFilePath, submFilePath, evaluationParams):
                                     else:
                                         correct = False
                                     # correct = gtTrans[gtNum].upper() == detTrans[detNum].upper()
+                                    Normalized_ED += edd / max(len(gtTrans[gtNum].upper()), len(detTrans[detNum].upper()))
                                 else:
                                     try:
                                         correct = transcription_match(gtTrans[gtNum].upper(),detTrans[detNum].upper(),evaluationParams['SPECIAL_CHARACTERS'],evaluationParams['ONLY_REMOVE_FIRST_LAST_CHARACTER'])==True
+                                        
+                                        Normalized_ED += edd / max(len(gtTrans[gtNum].upper()), len(detTrans[detNum].upper()))
                                     except: # empty
                                         correct = False
                                 detCorrect += (1 if correct else 0)
@@ -454,19 +489,23 @@ def evaluate_method(gtFilePath, submFilePath, evaluationParams):
                                         'detDontCare':detDontCarePolsNum,
                                         'evaluationParams': evaluationParams,
                                     }
-        
-    
+
     methodRecall = 0 if numGlobalCareGt == 0 else float(matchedSum)/numGlobalCareGt
     methodPrecision = 0 if numGlobalCareDet == 0 else float(matchedSum)/numGlobalCareDet
     methodHmean = 0 if methodRecall + methodPrecision==0 else 2* methodRecall * methodPrecision / (methodRecall + methodPrecision)
+    Normalized_ED = 0 if Normalized_ED == 0 else 1 - float(Normalized_ED) / total_num
 
     det_only_methodRecall = 0 if det_only_numGlobalCareGt == 0 else float(det_only_matchedSum)/det_only_numGlobalCareGt
     det_only_methodPrecision = 0 if det_only_numGlobalCareDet == 0 else float(det_only_matchedSum)/det_only_numGlobalCareDet
     det_only_methodHmean = 0 if det_only_methodRecall + det_only_methodPrecision==0 else 2* det_only_methodRecall * det_only_methodPrecision / (det_only_methodRecall + det_only_methodPrecision)
 
-    
-    methodMetrics = r"E2E_RESULTS: precision: {}, recall: {}, hmean: {}".format(methodPrecision, methodRecall, methodHmean)
-    det_only_methodMetrics = r"DETECTION_ONLY_RESULTS: precision: {}, recall: {}, hmean: {}".format(det_only_methodPrecision, det_only_methodRecall, det_only_methodHmean)
+    methodMetrics = r"E2E_RESULTS: precision: {}, recall: {}, hmean: {}, Normalized_ED: {}".format(methodPrecision, methodRecall, methodHmean, Normalized_ED)
+    bolt.send_metrics({'precision': methodPrecision})
+    bolt.send_metrics({'recall': methodRecall})
+    bolt.send_metrics({'hmean': methodHmean})
+    bolt.send_metrics({'Normalized_ED': Normalized_ED})
+
+    det_only_methodMetrics = r"DETECTION_ONLY_RESULTS: precision: {}, recall: {}, hmean: {}, Normalized_ED: {}".format(det_only_methodPrecision, det_only_methodRecall, det_only_methodHmean, Normalized_ED)
     
     
     resDict = {'calculated':True,'Message':'','e2e_method': methodMetrics,'det_only_method': det_only_methodMetrics,'per_sample': perSampleMetrics}

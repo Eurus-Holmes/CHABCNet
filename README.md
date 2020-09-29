@@ -124,6 +124,13 @@ bolt task submit --tar . --max-retries 3 --interactive --exclude env output buil
 ```
 
 
+## Submitting a Tune Task
+
+```
+bolt tune submit --tar . --config config.yaml --exclude env output build datasets datasets.tar.gz 
+```
+
+
 ## Dataset Setting
 
 ### Set up [Turi blobby](https://turiblobby.apple.com/getting-started.html#simcloud)

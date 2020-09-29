@@ -57,6 +57,9 @@ python my_Bezier_generator2.py
     
 ```python
 python my_generate_abcnet_json.py ./ train 0
+
+python my_generate_abcnet_json.py ./ train 
+python my_generate_abcnet_json.py ./ test
 ```
     
 
@@ -64,4 +67,12 @@ python my_generate_abcnet_json.py ./ train 0
     
 ```python
 python rename.py
+```
+
+
+
+## Deal with gt
+
+```shell
+find ./gt_rects/ -name '*' -print | zip -j gt_rects.zip -@
 ```

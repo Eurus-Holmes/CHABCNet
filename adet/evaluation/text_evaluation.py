@@ -55,7 +55,7 @@ class TextEvaluator(DatasetEvaluator):
             self._word_spotting = True
         elif "ReCTS_test" in dataset_name:
             self._text_eval_gt_path = "datasets/evaluation/gt_rects.zip"
-            self._word_spotting = False
+            self._word_spotting = True
         elif "ctw1500" in dataset_name:
             self._text_eval_gt_path = "datasets/evaluation/gt_ctw1500.zip"
             self._word_spotting = False
@@ -222,11 +222,11 @@ class TextEvaluator(DatasetEvaluator):
         os.remove(result_path)
 
         # parse
-        template = "(\S+): (\S+): (\S+), (\S+): (\S+), (\S+): (\S+)"
+        template = "(\S+): (\S+): (\S+), (\S+): (\S+), (\S+): (\S+), (\S+): (\S+)"
         for task in ("e2e_method", "det_only_method"):
             result = text_result[task]
             groups = re.match(template, result).groups()
-            self._results[groups[0]] = {groups[i*2+1]: float(groups[(i+1)*2]) for i in range(3)}
+            self._results[groups[0]] = {groups[i*2+1]: float(groups[(i+1)*2]) for i in range(4)}
 
         return copy.deepcopy(self._results)
 
@@ -283,7 +283,7 @@ def bezier_to_polygon(bezier):
 
 # CTLABELS = [' ','!','"','#','$','%','&','\'','(',')','*','+',',','-','.','/','0','1','2','3','4','5','6','7','8','9',':',';','<','=','>','?','@','A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z','[','\\',']','^','_','`','a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z','{','|','}','~']
 
-filepath = './dictionary_inv.json'
+filepath = './dictionary_inv2.json'
 CTLABELS = []
 with open(filepath, 'r') as f:
     data = json.load(f)
@@ -298,11 +298,11 @@ def ctc_decode(rec):
     s = ''
     for c in rec:
         c = int(c)
-        if c < 4135:
+        if c < 5713:
             if last_char != c:
                 s += CTLABELS[c]
                 last_char = c
-        elif c == 4135:
+        elif c == 5713:
             s += u'口'
         else:
             last_char = False
@@ -313,9 +313,9 @@ def decode(rec):
     s = ''
     for c in rec:
         c = int(c)
-        if c < 4135:
+        if c < 5713:
             s += CTLABELS[c]
-        elif c == 4135:
+        elif c == 5713:
             s += u'口'
     # print(s)
     return s

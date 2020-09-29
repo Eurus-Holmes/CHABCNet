@@ -1,5 +1,5 @@
-name: 'AdelaiDet'
-description: 'ICDAR 2019 Robust Reading Challenge on Reading Chinese Text on Signboard'
+name: 'from Best AdelaiDet-Hyperparameter Search, iq32xr887m'
+description: 'ReCTS+LSVT+ArT+RCTW'
 tags: ['AdelaiDet']
 command: 'bash run.sh'
 
@@ -10,11 +10,46 @@ command: 'bash run.sh'
 #  num_cpus: 2
 #  timeout: 10d
 
+parameters:
+  batch_size: 32
+  learning_rate: 0.001
+
 resources:
-  cluster: apc_usmsc28
-  docker_image: docker.apple.com/turibolt/pytorch1.0.1:latest
-  num_cpus: 2
-  num_gpus: 4
-  memory_gb: 23
-  disk_gb: 128
+  cluster: apc_usmsc39
+  docker_image: docker.apple.com/ad-algo/base-devel:0.5.2
+  num_cpus: 80
+  num_gpus: 8
+  memory_gb: 760
+  disk_gb: 8600
   timeout: 14d
+
+tune:
+  name: Bolt Tune Hyperparameter Search
+  description: searching on learning_rate and batch_size
+
+  search_strategy:
+    type: RANDOM_SEARCH
+
+  early_stopping:
+    type: MEDIAN_RULE
+    options:
+     min_finished_trials: 10
+     min_iterations: 20
+
+  objective_label: hmean
+  objective_goal: MAXIMIZE
+
+  num_trials: 20
+  max_concurrent_trials: 4
+  trials_per_parameter_set: 2
+
+  hyperparameters:
+   learning_rate:
+     range: [0.00001, 0.01]
+     type: CONTINUOUS
+   batch_size:
+     range: [16, 32, 64]
+     type: CATEGORICAL
+
+
+

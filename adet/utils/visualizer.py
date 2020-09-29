@@ -27,7 +27,7 @@ class TextVisualizer(Visualizer):
 
     def _decode_recognition(self, rec):
         # CTLABELS = [' ','!','"','#','$','%','&','\'','(',')','*','+',',','-','.','/','0','1','2','3','4','5','6','7','8','9',':',';','<','=','>','?','@','A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z','[','\\',']','^','_','`','a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z','{','|','}','~']
-        filepath = './dictionary_inv.json'
+        filepath = './dictionary_inv2.json'
         CTLABELS = []
         with open(filepath, 'r') as f:
             data = json.load(f)
@@ -38,15 +38,15 @@ class TextVisualizer(Visualizer):
         s = ''
         for c in rec:
             c = int(c)
-            if c < 4135:
+            if c < 5713:
                 s += CTLABELS[c]
-            elif c == 4135:
+            elif c == 5713:
                 s += u'口'
         return s
 
     def _ctc_decode_recognition(self, rec):
         # CTLABELS = [' ','!','"','#','$','%','&','\'','(',')','*','+',',','-','.','/','0','1','2','3','4','5','6','7','8','9',':',';','<','=','>','?','@','A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z','[','\\',']','^','_','`','a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z','{','|','}','~']
-        filepath = './dictionary_inv.json'
+        filepath = './dictionary_inv2.json'
         CTLABELS = []
         with open(filepath, 'r') as f:
             data = json.load(f)
@@ -59,11 +59,11 @@ class TextVisualizer(Visualizer):
         s = ''
         for c in rec:
             c = int(c)
-            if c < 4135:
+            if c < 5713:
                 if last_char != c:
                     s += CTLABELS[c]
                     last_char = c
-            elif c == 4135:
+            elif c == 5713:
                 s += u'口'
             else:
                 last_char = False

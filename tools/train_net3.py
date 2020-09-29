@@ -41,6 +41,8 @@ from adet.data.dataset_mapper import DatasetMapperWithBasis
 from adet.config import get_cfg
 from adet.checkpoint import AdetCheckpointer
 from adet.evaluation import TextEvaluator
+import turibolt as bolt
+from ruamel import yaml
 
 
 class Trainer(DefaultTrainer):
@@ -58,6 +60,9 @@ class Trainer(DefaultTrainer):
         """
         # Assume these objects must be constructed in this order.
         model = self.build_model(cfg)
+        #for name, p in model.named_parameters():
+        #    if "backbone" in name or "proposal_generator" in name or "roi_heads.tower" in name:
+        #        p.requires_grad = False
         optimizer = self.build_optimizer(cfg, model)
         data_loader = self.build_train_loader(cfg)
 
@@ -97,6 +102,7 @@ class Trainer(DefaultTrainer):
 
         with EventStorage(start_iter) as self.storage:
             self.before_train()
+            bolt.set_status_message(f'Iteration: {self.iter}')
             for self.iter in range(start_iter, max_iter):
                 self.before_step()
                 self.run_step()
@@ -231,7 +237,24 @@ def main(args):
     return trainer.train()
 
 
+def update_config(batch_size, learning_rate, output_path):
+    with open('configs/BAText/CTW1500/attn_R_50.yaml') as f:
+        content = yaml.load(f, Loader=yaml.RoundTripLoader)
+        content['SOLVER']['IMS_PER_BATCH'] = batch_size
+        content['SOLVER']['BASE_LR'] = learning_rate
+        content['OUTPUT_DIR'] = output_path
+    with open('configs/BAText/CTW1500/attn_R_50.yaml', 'w') as nf:
+        yaml.dump(content, nf, Dumper=yaml.RoundTripDumper)
+
+
 if __name__ == "__main__":
+    # Get parameters from current bolt config file.
+    config = bolt.get_current_config()
+    batch_size = config['parameters']['batch_size']
+    learning_rate = config['parameters']['learning_rate']
+    output_path = os.path.join(bolt.ARTIFACT_DIR, "output")
+    update_config(batch_size, learning_rate, output_path)
+
     args = default_argument_parser().parse_args()
     print("Command Line Args:", args)
     launch(

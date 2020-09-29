@@ -33,6 +33,9 @@ def gen_crop_transform_with_instance(crop_size, image_size, instances, crop_box=
     crop_size = np.asarray(crop_size, dtype=np.int32)
     bbox = BoxMode.convert(instance["bbox"], instance["bbox_mode"], BoxMode.XYXY_ABS)
     center_yx = (bbox[1] + bbox[3]) * 0.5, (bbox[0] + bbox[2]) * 0.5
+    # print(image_size[0], center_yx[0], image_size[1], center_yx[1])
+    # if not (image_size[0] >= center_yx[0] and image_size[1] >= center_yx[1]):
+    #     center_yx = (bbox[1] + bbox[3]) * 0.1, (bbox[0] + bbox[2]) * 0.1
     assert (
         image_size[0] >= center_yx[0] and image_size[1] >= center_yx[1]
     ), "The annotation bounding box is outside of the image!"

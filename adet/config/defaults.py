@@ -79,7 +79,7 @@ _C.MODEL.DLA.NORM = "FrozenBN"
 # BAText Options
 # ---------------------------------------------------------------------------- #
 _C.MODEL.BATEXT = CN()
-_C.MODEL.BATEXT.VOC_SIZE = 4136
+_C.MODEL.BATEXT.VOC_SIZE = 5714
 _C.MODEL.BATEXT.NUM_CHARS = 25
 _C.MODEL.BATEXT.POOLER_RESOLUTION = (8, 32)
 _C.MODEL.BATEXT.IN_FEATURES = ["p2", "p3", "p4"]
@@ -118,7 +118,7 @@ _C.MODEL.BASIS_MODULE.NORM = "SyncBN"
 _C.MODEL.BASIS_MODULE.NUM_CONVS = 3
 _C.MODEL.BASIS_MODULE.COMMON_STRIDE = 8
 _C.MODEL.BASIS_MODULE.NUM_CLASSES = 80
-_C.MODEL.BASIS_MODULE.LOSS_WEIGHT = 20
+_C.MODEL.BASIS_MODULE.LOSS_WEIGHT = 4.0
 
 # ---------------------------------------------------------------------------- #
 # MEInst Head

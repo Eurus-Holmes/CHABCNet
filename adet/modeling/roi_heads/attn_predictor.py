@@ -31,7 +31,7 @@ class CRNN(nn.Module):
         super(CRNN, self).__init__()
         conv_func = conv_with_kaiming_uniform(norm="GN", activation=True)
         convs = []
-        for i in range(2):
+        for i in range(6):
             convs.append(conv_func(in_channels, in_channels, 3, stride=(2, 1)))
         self.convs = nn.Sequential(*convs)
         self.rnn = BidirectionalLSTM(in_channels, in_channels, in_channels)

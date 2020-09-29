@@ -27,6 +27,7 @@ def setup_cfg(args):
     cfg.MODEL.ROI_HEADS.SCORE_THRESH_TEST = args.confidence_threshold
     cfg.MODEL.FCOS.INFERENCE_TH_TEST = args.confidence_threshold
     cfg.MODEL.PANOPTIC_FPN.COMBINE.INSTANCES_CONFIDENCE_THRESH = args.confidence_threshold
+    cfg.MODEL.BATEXT.VOC_SIZE = 5714
     cfg.freeze()
     return cfg
 
