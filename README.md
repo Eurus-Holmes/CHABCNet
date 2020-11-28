@@ -54,7 +54,7 @@ python demo/demo.py \
 
 ### Train Your Own Models
 
-1. Step one: [Data processing](https://github.geo.apple.com/feiyang-chen/AdelaiDet/tree/master/data_processing)
+1. Step one: [Data processing](https://github.com/Eurus-Holmes/CHABCNet/tree/master/data_processing)
 
 2. Step two: Put the ReCTS dataset to `dataset` folder
 
